@@ -1,6 +1,7 @@
 chrome.storage.sync.get({
   enableTextSearch: true,
   searchUrl: 'https://www.google.com/search?q=%s',
+  enableOpenTabInBg: true,
   enableLinkOpen: true,
   enableLinkTextSelect: false
 }, items => {
@@ -10,6 +11,7 @@ chrome.storage.sync.get({
 
   const enableTextSearch = document.getElementById('enable-text-search');
   const searchUrl = document.getElementById('search-url');
+  const enableOpenTabInBg = document.getElementById('enable-open-tab-in-bg');
   const enableLinkOpen = document.getElementById('enable-link-open');
   const enableLinkTextSelect = document.getElementById('enable-link-text-select');
   const save = document.getElementById('save');
@@ -17,6 +19,7 @@ chrome.storage.sync.get({
 
   enableTextSearch.checked = items.enableTextSearch;
   searchUrl.value = items.searchUrl;
+  enableOpenTabInBg.checked = items.enableOpenTabInBg;  
   enableLinkOpen.checked = items.enableLinkOpen;
   enableLinkTextSelect.checked = items.enableLinkTextSelect;
 
@@ -29,6 +32,7 @@ chrome.storage.sync.get({
     chrome.storage.sync.set({
       enableTextSearch: enableTextSearch.checked,
       searchUrl: searchUrl.value,
+	  enableOpenTabInBg: enableOpenTabInBg.checked,
       enableLinkOpen: enableLinkOpen.checked,
       enableLinkTextSelect: enableLinkTextSelect.checked
     }, () => {

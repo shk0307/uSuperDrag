@@ -1,6 +1,21 @@
 chrome.runtime.onMessage.addListener(message => {
-  chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+  chrome.tabs.query({
+	  active: true,
+	  currentWindow: true}, tabs => {
     const activeTab = tabs[0];
-    chrome.tabs.create({index: activeTab.index + 1, url: message, openerTabId: activeTab.id});
+
+   chrome.storage.sync.get(['enableOpenTabInBg'], function(result) {
+ 	  if (result.enableOpenTabInBg === true){
+	  var tabMode = false
+	  } else {
+		 var tabMode = true
+	  };
+
+    chrome.tabs.create({
+		url: message,
+		index: activeTab.index + 1,
+		openerTabId: activeTab.id,
+		active: tabMode,});
+    });
   });
 });
