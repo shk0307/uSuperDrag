@@ -3,11 +3,11 @@
     "message": "uSuperDrag"
   },
   "extensionDescription": {
-    "message": "Drag selected text to search for and link to open in a new tab"
+    "message": "Drag and drop selected text to search or open links in a new tab"
   },
 
   "enableTextSearch": {
-    "message": "Drag selected text to search for"
+    "message": "Drag and drop selected text to search"
   },
   "searchUrl": {
     "message": "Search URL"
@@ -15,8 +15,11 @@
   "searchUrlDescription": {
     "message": "Substitute search keyword in address with %s or %S"
   },
+  "enableOpenTabInBg": {
+      "message": "Open tabs in the background"
+   },
   "enableLinkOpen": {
-    "message": "Drag link to open in a new tab"
+    "message": "Drag and drop link to open in a new tab"
   },
   "enableLinkTextSelect": {
     "message": "Drag link text horizontally to select"
