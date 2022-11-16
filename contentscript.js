@@ -1,3 +1,12 @@
+const ignoreBoxSize = 50;
+
+class Coords {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
 chrome.storage.sync.get({
   enableTextSearch: true,
   searchUrl: 'https://www.google.com/search?q=%s',
@@ -9,6 +18,11 @@ chrome.storage.sync.get({
       'input[type="email"], input[type="number"], input[type="password"], input[type="search"], ' +
       'input[type="tel"], input[type="text"], input[type="url"], textarea'
     ) && !element.disabled;
+
+    document.addEventListener('dragstart', event => {
+      this.startCoords = new Coords(event.pageX, event.pageY);
+    }, false);
+
     document.addEventListener('dragover', event => {
       if (event.dataTransfer.types.includes('text/uri-list')) {
         if (items.enableLinkOpen) {
@@ -22,15 +36,18 @@ chrome.storage.sync.get({
         }
       }
     }, false);
+
     document.addEventListener('drop', event => {
       if (event.dataTransfer.types.includes('text/uri-list')) {
-        if (items.enableLinkOpen) {
+        this.endCoords = new Coords(event.pageX, event.pageY);
+        if (items.enableLinkOpen && validateEvent(startCoords, endCoords)) {
           const url = event.dataTransfer.getData('URL');
           chrome.runtime.sendMessage(url);
           event.preventDefault();
         }
       } else if (event.dataTransfer.types.includes('text/plain')) {
-        if (items.enableTextSearch && !isTextArea(event.target)) {
+        this.endCoords = new Coords(event.pageX, event.pageY);
+        if (items.enableTextSearch && !isTextArea(event.target) && validateEvent(startCoords, endCoords)) {
           const keyword = event.dataTransfer.getData('text/plain');
           const url = items.searchUrl.replace(/%s/gi, encodeURIComponent(keyword));
           chrome.runtime.sendMessage(url);
@@ -39,6 +56,13 @@ chrome.storage.sync.get({
       }
     }, false);
   }
+
+  function validateEvent(startCoords, endCoords) {
+    const x = Math.abs(startCoords.x - endCoords.x);
+    const y = Math.abs(startCoords.y - endCoords.y);
+    return (x > ignoreBoxSize || y > ignoreBoxSize)
+  }
+
   if (items.enableLinkTextSelect) {
     // The original code is copyrighted by Griever and licensed under the MIT license.
     class LinkDragSelection {
